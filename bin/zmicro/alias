@@ -13,7 +13,7 @@ help() {
 }
 
 version() {
-  kubectl --version
+  kubectl version
 }
 
 core() {
