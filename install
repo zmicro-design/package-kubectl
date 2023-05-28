@@ -1,0 +1,39 @@
+#!/bin/bash
+
+help() {
+  echo "Usage:"
+  echo "  zmicro package install ${PACKAGE_NAME} <args...>"
+  echo ""
+}
+
+core() {
+  if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+    help
+    exit 0
+  fi
+
+  install "$@"
+  if [ "$?" != "0" ]; then
+    log::error "[$(timestamp)] failed to install ${PACKAGE_NAME}."
+    return 1
+  fi
+
+  log::success "[$(timestamp)] succeed to install ${PACKAGE_NAME}."
+}
+
+run() {
+  core "$@"
+}
+
+if [ "$1" = "ONE_LINE" ]; then
+  command -v zmicro >>/dev/null 2>&1
+  if [ $? -ne 0 ]; then
+    curl -o- https://raw.githubusercontent.com/zcorky/zmicro/master/install | sh
+  fi
+
+  zmicro package install kubectl
+else
+  set -e
+
+  run "$@"
+fi

@@ -1,0 +1,45 @@
+#!/bin/bash
+
+export PACKAGE_NAME="kubectl"
+import "$ZMICRO_PACKAGES_PATH/$PACKAGE_NAME/config"
+import "$ZMICRO_PACKAGES_PATH/$PACKAGE_NAME/core"
+
+help() {
+  echo "Usage:"
+  echo "  zmicro kubectl <args ...>"
+  echo ""
+
+  kubectl --help
+}
+
+version() {
+  kubectl --version
+}
+
+core() {
+  # context directory
+  local context="$ZMICRO_PACKAGES_DATA_PATH/kubectl"
+  if [ ! -d "$context" ]; then
+    mkdir -p $context
+  fi
+  cd $context
+  # context directory
+
+  case $1 in
+  -h | --help | help)
+    help
+    ;;
+  -v | --version | version)
+    version
+    ;;
+  *)
+    kubectl "$@"
+    ;;
+  esac
+}
+
+run() {
+  core "$@"
+}
+
+run "$@"
